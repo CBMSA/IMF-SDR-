@@ -1,0 +1,198 @@
+{
+	"compiler": {
+		"version": "0.8.30+commit.73712a01"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "admin",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "getLoan",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum TrustAllocator.LoanType",
+						"name": "loanType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interestRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maturityDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "gracePeriod",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getLoanCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "loans",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum TrustAllocator.LoanType",
+						"name": "loanType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "interestRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "maturityDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "gracePeriod",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "enum TrustAllocator.LoanType",
+						"name": "_loanType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_interestRate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_maturityDate",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_gracePeriod",
+						"type": "uint256"
+					}
+				],
+				"name": "requestLoan",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"IMFTrust.sol": "TrustAllocator"
+		},
+		"evmVersion": "prague",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"IMFTrust.sol": {
+			"keccak256": "0x2ab0aebbe159443c1de59b0619b65b3bf0453b5ce20dcd15f0e20ea535e8fbcd",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://57f111e31c557027e35f5aa1d8c13706c94aac9714295b6791acdbe46124902b",
+				"dweb:/ipfs/QmRFCSJURY985A6cwpkrSqV2J9sX3wWPC9W8FaVgxxDHMS"
+			]
+		}
+	},
+	"version": 1
+}
