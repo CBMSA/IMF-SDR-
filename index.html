@@ -1,162 +1,107 @@
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>IMF SDR & Trust Fund DApp</title>
   <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
   <style>
     body {
+      font-family: Arial, sans-serif;
       background-color: #ffffff;
       color: #0033a0;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
     }
-
+    header {
+      background-color: #0033a0;
+      padding: 20px;
+      text-align: center;
+    }
+    header img {
+      height: 80px;
+    }
     h1, h2 {
+      text-align: center;
       color: #0033a0;
     }
-
-    input, select {
-      margin: 10px;
-      padding: 10px;
-      border: 1px solid #0033a0;
-      border-radius: 5px;
-      width: 250px;
+    section {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f5faff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
+    input, select, button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
     button {
-      padding: 10px 20px;
       background-color: #0033a0;
       color: white;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
-      margin-top: 10px;
     }
-
     button:hover {
       background-color: #002080;
     }
-
-    #logo {
-      max-width: 120px;
-      display: block;
-      margin: 0 auto 20px auto;
+    p {
+      font-weight: bold;
+      margin-top: 10px;
     }
-
     footer {
-      margin-top: 50px;
+      text-align: center;
+      padding: 15px;
+      background-color: #0033a0;
+      color: white;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
       font-size: 14px;
-      color: #777;
     }
   </style>
 </head>
 <body>
-  <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/6/6a/International_Monetary_Fund_logo.svg" alt="IMF Logo">
+  <header>
+    <img src="imf_logo.png" alt="IMF Logo">
+  </header>
+
   <h1>IMF SDR & Trust Fund Dashboard</h1>
 
-  <h2>Assign SDR</h2>
-  <input id="sdrAddress" placeholder="Recipient Address">
-  <input id="sdrAmount" placeholder="Amount">
-  <br>
-  <button onclick="assignSDR()">Assign SDR</button>
-  <p id="sdrStatus"></p>
+  <section>
+    <h2>Issue SDR to Your Wallet</h2>
+    <p>Global SDR Allocation: <strong>650 Billion SDR</strong></p>
+    <button onclick="issueSDR()">Issue 1000 SDR to Connected Wallet</button>
+    <p id="issueStatus"></p>
+  </section>
 
-  <h2>Request Trust Fund Loan</h2>
-  <input id="loanAmount" placeholder="Loan Amount">
-  <select id="loanType">
-    <option value="0">PRGT</option>
-    <option value="1">RST</option>
-  </select>
-  <input id="interestRate" placeholder="Interest Rate (bps)">
-  <input id="maturityDate" placeholder="Maturity Date (timestamp)">
-  <input id="gracePeriod" placeholder="Grace Period (days)">
-  <br>
-  <button onclick="requestLoan()">Submit Request</button>
-  <p id="loanStatus"></p>
+  <section>
+    <h2>Request Trust Fund Loan</h2>
+    <p>Annual Lending Capacity: <strong>30 Billion USD</strong></p>
+    <input id="loanAmount" placeholder="Loan Amount">
+    <select id="loanType">
+      <option value="0">PRGT</option>
+      <option value="1">RST</option>
+    </select>
+    <input id="interestRate" placeholder="Interest Rate (bps)">
+    <input id="maturityDate" placeholder="Maturity Date (timestamp)">
+    <input id="gracePeriod" placeholder="Grace Period (days)">
+    <button onclick="requestLoan()">Submit Request</button>
+    <p id="loanStatus"></p>
+  </section>
 
   <footer>
     &copy; 2025 International Monetary Fund (IMF). All rights reserved.
   </footer>
 
   <script>
-    const SDRIssuerABI = [
-      { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
-      {
-        "inputs": [{ "internalType": "address", "name": "recipient", "type": "address" }],
-        "name": "getSDRBalance",
-        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          { "internalType": "address", "name": "recipient", "type": "address" },
-          { "internalType": "uint256", "name": "amount", "type": "uint256" }
-        ],
-        "name": "assignSDR",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "admin",
-        "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-        "stateMutability": "view",
-        "type": "function"
-      }
-    ];
-
-    const TrustAllocatorABI = [
-      { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
-      {
-        "inputs": [],
-        "name": "getLoanCount",
-        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [{ "internalType": "uint256", "name": "index", "type": "uint256" }],
-        "name": "getLoan",
-        "outputs": [
-          { "internalType": "address", "name": "borrower", "type": "address" },
-          { "internalType": "uint256", "name": "amount", "type": "uint256" },
-          { "internalType": "uint8", "name": "loanType", "type": "uint8" },
-          { "internalType": "uint256", "name": "interestRate", "type": "uint256" },
-          { "internalType": "uint256", "name": "maturityDate", "type": "uint256" },
-          { "internalType": "uint256", "name": "gracePeriod", "type": "uint256" }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          { "internalType": "uint256", "name": "_amount", "type": "uint256" },
-          { "internalType": "uint8", "name": "_loanType", "type": "uint8" },
-          { "internalType": "uint256", "name": "_interestRate", "type": "uint256" },
-          { "internalType": "uint256", "name": "_maturityDate", "type": "uint256" },
-          { "internalType": "uint256", "name": "_gracePeriod", "type": "uint256" }
-        ],
-        "name": "requestLoan",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "admin",
-        "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-        "stateMutability": "view",
-        "type": "function"
-      }
-    ];
-
-    const SDRIssuerAddress = "0xSDR_CONTRACT_ADDRESS"; // Replace with deployed address
-    const TrustAllocatorAddress = "0xTRUST_CONTRACT_ADDRESS"; // Replace with deployed address
+    const SDRIssuerABI = [ /* ABI will be inserted here */ ];
+    const TrustAllocatorABI = [ /* ABI will be inserted here */ ];
+    const SDRIssuerAddress = "0xSDR_CONTRACT_ADDRESS";
+    const TrustAllocatorAddress = "0xTRUST_CONTRACT_ADDRESS";
 
     let web3, accounts, sdrIssuer, trustAllocator;
 
@@ -173,15 +118,13 @@
       }
     });
 
-    async function assignSDR() {
-      const recipient = document.getElementById("sdrAddress").value;
-      const amount = document.getElementById("sdrAmount").value;
-
+    async function issueSDR() {
       try {
-        await sdrIssuer.methods.assignSDR(recipient, amount).send({ from: accounts[0] });
-        document.getElementById("sdrStatus").innerText = "SDR assigned successfully.";
+        const amount = web3.utils.toWei("1000", "ether");
+        await sdrIssuer.methods.assignSDR(accounts[0], amount).send({ from: accounts[0] });
+        document.getElementById("issueStatus").innerText = "Issued 1000 SDR to your wallet.";
       } catch (err) {
-        document.getElementById("sdrStatus").innerText = "Error: " + err.message;
+        document.getElementById("issueStatus").innerText = "Error: " + err.message;
       }
     }
 
@@ -203,4 +146,6 @@
   </script>
 </body>
 </html>
+
+
 
