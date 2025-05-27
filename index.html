@@ -1,16 +1,66 @@
-          
+
+
 <!DOCTYPE html>
 <html>
 <head>
   <title>IMF SDR & Trust Fund DApp</title>
   <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+  <style>
+    body {
+      background-color: #ffffff;
+      color: #0033a0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      color: #0033a0;
+    }
+
+    input, select {
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #0033a0;
+      border-radius: 5px;
+      width: 250px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #0033a0;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #002080;
+    }
+
+    #logo {
+      max-width: 120px;
+      display: block;
+      margin: 0 auto 20px auto;
+    }
+
+    footer {
+      margin-top: 50px;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
+  <img id="logo" src="https://upload.wikimedia.org/wikipedia/commons/6/6a/International_Monetary_Fund_logo.svg" alt="IMF Logo">
   <h1>IMF SDR & Trust Fund Dashboard</h1>
 
   <h2>Assign SDR</h2>
   <input id="sdrAddress" placeholder="Recipient Address">
   <input id="sdrAmount" placeholder="Amount">
+  <br>
   <button onclick="assignSDR()">Assign SDR</button>
   <p id="sdrStatus"></p>
 
@@ -23,8 +73,13 @@
   <input id="interestRate" placeholder="Interest Rate (bps)">
   <input id="maturityDate" placeholder="Maturity Date (timestamp)">
   <input id="gracePeriod" placeholder="Grace Period (days)">
+  <br>
   <button onclick="requestLoan()">Submit Request</button>
   <p id="loanStatus"></p>
+
+  <footer>
+    &copy; 2025 International Monetary Fund (IMF). All rights reserved.
+  </footer>
 
   <script>
     const SDRIssuerABI = [
@@ -100,8 +155,8 @@
       }
     ];
 
-    const SDRIssuerAddress = "0xSDR_CONTRACT_ADDRESS"; // Replace with actual deployed SDR contract address
-    const TrustAllocatorAddress = "0xTRUST_CONTRACT_ADDRESS"; // Replace with actual deployed Trust contract address
+    const SDRIssuerAddress = "0xSDR_CONTRACT_ADDRESS"; // Replace with deployed address
+    const TrustAllocatorAddress = "0xTRUST_CONTRACT_ADDRESS"; // Replace with deployed address
 
     let web3, accounts, sdrIssuer, trustAllocator;
 
@@ -148,6 +203,4 @@
   </script>
 </body>
 </html>
-
-
 
