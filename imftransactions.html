@@ -1,0 +1,107 @@
+
+<section>
+  <h2>Select Country Central Bank / Treasury</h2>
+  <select id="countrySelector">
+    <option value="0xFEDERAL_RESERVE">USA - Federal Reserve</option>
+    <option value="0xECB">EU - European Central Bank</option>
+    <option value="0xBOE">UK - Bank of England</option>
+    <option value="0xPBOC">China - People's Bank of China</option>
+    <option value="0xBOJ">Japan - Bank of Japan</option>
+    <option value="0xSARB">South Africa - SARB</option>
+    <option value="0xCBK">Kenya - Central Bank of Kenya</option>
+    <option value="0xRBA">Australia - Reserve Bank of Australia</option>
+    <option value="0xINRBI">India - Reserve Bank of India</option>
+    <option value="0xBCR">Brazil - Banco Central do Brasil</option>
+    <!-- Add more as needed -->
+  </select>
+</section>
+
+<section>
+  <h2>Send IMF Annual Subscription</h2>
+  <input id="subscriptionAmount" placeholder="Subscription Amount (in SDR)">
+  <button onclick="paySubscription()">Pay Subscription</button>
+  <p id="subscriptionStatus"></p>
+</section>
+
+<section>
+  <h2>Send SDR to Selected Country</h2>
+  <input id="sendAmount" placeholder="Amount (in SDR)">
+  <button onclick="sendSDR()">Send SDR</button>
+  <p id="sendStatus"></p>
+</section>
+
+<script>
+  // Replace with actual SDRIssuer & TrustAllocator contract ABIs and addresses
+  const SDRIssuerABI = [ /* ABI */ ];
+  const TrustAllocatorABI = [ /* ABI */ ];
+  const SDRIssuerAddress = "0xSDR_CONTRACT_ADDRESS";
+  const TrustAllocatorAddress = "0xTRUST_CONTRACT_ADDRESS";
+
+  let web3, accounts, sdrIssuer, trustAllocator;
+
+  window.addEventListener('load', async () => {
+    if (window.ethereum) {
+      web3 = new Web3(window.ethereum);
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      accounts = await web3.eth.getAccounts();
+
+      sdrIssuer = new web3.eth.Contract(SDRIssuerABI, SDRIssuerAddress);
+      trustAllocator = new web3.eth.Contract(TrustAllocatorABI, TrustAllocatorAddress);
+    } else {
+      alert("Please install MetaMask to use this DApp.");
+    }
+  });
+
+  async function issueSDR() {
+    try {
+      const amount = web3.utils.toWei("1000", "ether");
+      await sdrIssuer.methods.assignSDR(accounts[0], amount).send({ from: accounts[0] });
+      document.getElementById("issueStatus").innerText = "Issued 1000 SDR to your wallet.";
+    } catch (err) {
+      document.getElementById("issueStatus").innerText = "Error: " + err.message;
+    }
+  }
+
+  async function requestLoan() {
+    const amount = document.getElementById("loanAmount").value;
+    const type = document.getElementById("loanType").value;
+    const interest = document.getElementById("interestRate").value;
+    const maturity = document.getElementById("maturityDate").value;
+    const grace = document.getElementById("gracePeriod").value;
+
+    try {
+      await trustAllocator.methods.requestLoan(amount, type, interest, maturity, grace)
+        .send({ from: accounts[0] });
+      document.getElementById("loanStatus").innerText = "Loan request submitted.";
+    } catch (err) {
+      document.getElementById("loanStatus").innerText = "Error: " + err.message;
+    }
+  }
+
+  async function paySubscription() {
+    const amount = document.getElementById("subscriptionAmount").value;
+    const weiAmount = web3.utils.toWei(amount, "ether");
+
+    try {
+      await sdrIssuer.methods.assignSDR(accounts[0], weiAmount).send({ from: accounts[0] });
+      document.getElementById("subscriptionStatus").innerText = `Paid ${amount} SDR subscription.`;
+    } catch (err) {
+      document.getElementById("subscriptionStatus").innerText = "Error: " + err.message;
+    }
+  }
+
+  async function sendSDR() {
+    const amount = document.getElementById("sendAmount").value;
+    const to = document.getElementById("countrySelector").value;
+    const weiAmount = web3.utils.toWei(amount, "ether");
+
+    try {
+      await sdrIssuer.methods.transfer(to, weiAmount).send({ from: accounts[0] });
+      document.getElementById("sendStatus").innerText = `Sent ${amount} SDR to selected country.`;
+    } catch (err) {
+      document.getElementById("sendStatus").innerText = "Error: " + err.message;
+    }
+  }
+</script>
+
+
